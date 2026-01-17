@@ -2,19 +2,19 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Code') {
+        stage('Docker Info') {
             steps {
-                echo 'Code cloned from GitHub'
+                sh 'docker info'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Image') {
             steps {
                 sh 'docker build -t html-app .'
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Run Container') {
             steps {
                 sh '''
                 docker rm -f html-container || true
