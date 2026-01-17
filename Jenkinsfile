@@ -2,19 +2,26 @@ pipeline {
     agent any
 
     stages {
-        stage('Docker Info') {
+        stage('Check Workspace') {
             steps {
-                sh 'docker info'
+                sh 'pwd'
+                sh 'ls -l'
             }
         }
 
-        stage('Build Image') {
+        stage('Docker Access Check') {
+            steps {
+                sh 'docker version'
+            }
+        }
+
+        stage('Build Docker Image') {
             steps {
                 sh 'docker build -t html-app .'
             }
         }
 
-        stage('Run Container') {
+        stage('Run Docker Container') {
             steps {
                 sh '''
                 docker rm -f html-container || true
