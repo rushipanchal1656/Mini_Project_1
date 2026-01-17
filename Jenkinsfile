@@ -2,16 +2,28 @@ pipeline {
     agent any
 
     stages {
-        stage('Check Workspace') {
+
+        stage('Checkout Code') {
             steps {
-                sh 'pwd'
-                sh 'ls -l'
+                echo 'Checking out code from GitHub'
+                checkout scm
             }
         }
 
-        stage('Docker Access Check') {
+        stage('Verify Workspace') {
             steps {
-                sh 'docker version'
+                sh '''
+                echo "Current directory:"
+                pwd
+                echo "Files in workspace:"
+                ls -l
+                '''
+            }
+        }
+
+        stage('Docker Version Check') {
+            steps {
+                sh 'docker --version'
             }
         }
 
@@ -28,6 +40,15 @@ pipeline {
                 docker run -d -p 80:80 --name html-container html-app
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and Deployment Successful'
+        }
+        failure {
+            echo '❌ Build Failed'
         }
     }
 }
